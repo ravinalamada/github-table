@@ -1,5 +1,8 @@
+
 import { Table, TableRow, Menu, Icon } from 'semantic-ui-react'
 import { useQuery } from 'graphql-hooks'
+import InputSearch from './InputSearch'
+import { useCallback, useState } from 'react'
 
 interface RepositoriesData {
   id: string;
@@ -22,8 +25,8 @@ interface SearchResult {
 }
 
 const REPOSITORIES_SEARCH_QUERY = `
-  query Search($after: String, $before: String, $first: Int, $last: Int) {   
-    search(query: "react sort:stars", type: REPOSITORY, after: $after, before: $before, first: $first, last: $last) {
+  query Search($searchTerm: String!, $after: String, $before: String, $first: Int, $last: Int) {   
+    search(query: $searchTerm,  type: REPOSITORY, after: $after, before: $before, first: $first, last: $last) {
       pageInfo {    
         endCursor,    
         hasNextPage,    
@@ -42,11 +45,15 @@ const REPOSITORIES_SEARCH_QUERY = `
     } }
   }
 `
-
+const defaultSearchTerm = 'react'
 const GithubTable = () => {
+
+  const [searchTerm, setSearchTerm] = useState(defaultSearchTerm);
+  
   const { loading, error, data, refetch } = useQuery<{ search: SearchResult }>(REPOSITORIES_SEARCH_QUERY, {
     variables: {
-      first: 20,
+      first: 10,
+      searchTerm: getSearchTermWithSorting(defaultSearchTerm)
     }
   })
 
@@ -59,8 +66,9 @@ const GithubTable = () => {
   const handleNextPage = () => {
     refetch({
       variables: {
-        first: 20,
+        first: 10,
         after: paginationInfo?.endCursor,
+        searchTerm: getSearchTermWithSorting(searchTerm)
       }
     })
   }
@@ -68,14 +76,25 @@ const GithubTable = () => {
   const handlePreviousPage = () => {
     refetch({
       variables: {
-        last: 20,
+        last: 10,
         before: paginationInfo?.startCursor,
+        searchTerm: getSearchTermWithSorting(searchTerm)
+      }
+    })
+  }
+
+  const handleSearch = (searchTerm: string) => {
+    refetch({
+      variables: {
+        first: 10,
+        searchTerm: getSearchTermWithSorting(searchTerm)
       }
     })
   }
 
   return (
     <div>
+      <InputSearch setSearchTerm={setSearchTerm} searchTerm={searchTerm} handleSearch={handleSearch} />
       <Table celled>
         <Table.Header>
           <Table.Row>
@@ -127,3 +146,7 @@ const GithubTable = () => {
 }
 
 export default GithubTable
+
+const getSearchTermWithSorting = (searchTerm: string) => {
+  return `${searchTerm} sort:stars`
+}
