@@ -1,6 +1,14 @@
 import { Table, TableRow } from 'semantic-ui-react'
 import { useQuery } from 'graphql-hooks'
 
+interface RepositoriesData {
+  id: string;
+  name: string;
+  url: string;
+  forkCount: number;
+  stargazerCount: number;
+}
+
 const REPOSITORIES_SEARCH_QUERY = `
   query{
     search(query: "react sort:stars", type: REPOSITORY, first: 20) {
@@ -40,9 +48,9 @@ export default function GithubTable() {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {searchResults.map((search: any, index: number) => {
+          {searchResults.map((search: RepositoriesData) => {
             return (
-              <TableRow key={index}>
+              <TableRow key={search.id}>
                 <Table.Cell><a href={search.url}>{search.name}</a></Table.Cell>
                 <Table.Cell>{search.forkCount}</Table.Cell>
                 <Table.Cell>{search.stargazerCount}</Table.Cell>
