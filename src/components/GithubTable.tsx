@@ -43,8 +43,8 @@ const REPOSITORIES_SEARCH_QUERY = `
   }
 `
 
-export default function GithubTable() {
-  const { loading, error, data } = useQuery<{search: SearchResult}>(REPOSITORIES_SEARCH_QUERY, {
+const GithubTable = () => {
+  const { loading, error, data, refetch } = useQuery<{ search: SearchResult }>(REPOSITORIES_SEARCH_QUERY, {
     variables: {
       first: 20,
     }
@@ -55,6 +55,24 @@ export default function GithubTable() {
 
   const searchResults = data?.search.nodes;
   const paginationInfo = data?.search.pageInfo
+
+  const handleNextPage = () => {
+    refetch({
+      variables: {
+        first: 20,
+        after: paginationInfo?.endCursor,
+      }
+    })
+  }
+
+  const handlePreviousPage = () => {
+    refetch({
+      variables: {
+        last: 20,
+        before: paginationInfo?.startCursor,
+      }
+    })
+  }
 
   return (
     <div>
@@ -83,10 +101,20 @@ export default function GithubTable() {
           <Table.Row>
             <Table.HeaderCell colSpan='3'>
               <Menu floated='right' pagination>
-                <Menu.Item as='button' disabled={!paginationInfo?.hasPreviousPage} icon>
+                <Menu.Item
+                  as='button'
+                  disabled={!paginationInfo?.hasPreviousPage}
+                  icon
+                  onClick={handlePreviousPage}
+                >
                   <Icon name='chevron left' />
                 </Menu.Item>
-                <Menu.Item as='button' disabled={!paginationInfo?.hasNextPage} icon>
+                <Menu.Item
+                  as='button'
+                  disabled={!paginationInfo?.hasNextPage}
+                  icon
+                  onClick={handleNextPage}
+                >
                   <Icon name='chevron right' />
                 </Menu.Item>
               </Menu>
@@ -98,3 +126,4 @@ export default function GithubTable() {
   )
 }
 
+export default GithubTable
