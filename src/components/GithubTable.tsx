@@ -46,10 +46,10 @@ const REPOSITORIES_SEARCH_QUERY = `
   }
 `
 const defaultSearchTerm = 'react'
-const GithubTable = () => {
 
+const GithubTable = () => {
   const [searchTerm, setSearchTerm] = useState(defaultSearchTerm);
-  
+
   const { loading, error, data, refetch } = useQuery<{ search: SearchResult }>(REPOSITORIES_SEARCH_QUERY, {
     variables: {
       first: 10,
