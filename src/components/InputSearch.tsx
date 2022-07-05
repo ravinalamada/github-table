@@ -16,7 +16,7 @@ const InputSearch = ({ searchTerm, handleSearch, setSearchTerm }: InputProps) =>
  
   return (
     <Input
-      icon={<Icon onClick={handleSearch} data-testid='button-search' name='search' inverted circular link />}
+      icon={<Icon onClick={() => handleSearch(searchTerm)} data-testid='button-search' name='search' inverted circular link />}
       placeholder='Search...'
       data-testid='search-input'
       value={searchTerm}
