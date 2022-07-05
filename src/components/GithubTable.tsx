@@ -103,7 +103,7 @@ const GithubTable = () => {
             <Table.HeaderCell>Forks</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
-        <Table.Body>
+        <Table.Body data-testid='table-body'>
           {searchResults?.map((search: RepositoriesData) => {
             return (
               <TableRow key={search.id}>
