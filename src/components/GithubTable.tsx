@@ -2,7 +2,7 @@
 import { Table, TableRow, Menu, Icon } from 'semantic-ui-react'
 import { useQuery } from 'graphql-hooks'
 import InputSearch from './InputSearch'
-import { useCallback, useState } from 'react'
+import {useState } from 'react'
 
 interface RepositoriesData {
   id: string;
