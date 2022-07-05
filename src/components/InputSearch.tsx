@@ -1,5 +1,4 @@
 import { Input, Icon } from 'semantic-ui-react';
-import {useCallback, useState} from 'react';
 
 interface InputProps {
   searchTerm: string;
@@ -7,24 +6,19 @@ interface InputProps {
   handleSearch: (searchTerm: string) => void;
 }
 
-
-
 const InputSearch = ({ searchTerm, handleSearch, setSearchTerm }: InputProps) => {
-  // const [searchTerm, setSearchTerm] = useState('');
-  
+ 
   const handleKeyDown = (e: any) => {
     if (e.key === 'Enter') {
       handleSearch(searchTerm)
     }
   }
-
-
-
-  
+ 
   return (
     <Input
       icon={<Icon onClick={handleSearch} name='search' inverted circular link />}
       placeholder='Search...'
+      data-testid='search-input'
       value={searchTerm}
       onKeyDown={handleKeyDown}
       onChange={(e) => setSearchTerm(e.target.value)}
